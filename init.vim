@@ -41,8 +41,6 @@ function! ConfigurePlugins(ConfigDir)
 	execute ':silent !cd /d ' . a:ConfigDir . '\bundle && git clone git://github.com/Xuyuanp/nerdtree-git-plugin.git'
 	" Clone Vim Indent Guides
 	execute ':silent !cd /d ' . a:ConfigDir . '\bundle && git clone git://github.com/nathanaelkane/vim-indent-guides.git'
-	" Clone Lightline (status line)
-	execute ':silent !cd /d ' . a:ConfigDir . '\bundle && git clone git://github.com/itchyny/lightline.vim'
 endfunction
 
 function! ConfigureColorSchemes(ColorDir)
@@ -99,23 +97,12 @@ Plug 'rdnetto/YCM-Generator', { 'branch': 'stable' }
 " Plugin options
 "Plug 'nsf/gocode', { 'tag': 'v.20150303', 'rtp': 'vim' }
 
-" Plugin outside ~/.vim/plugged with post-update hook
-"Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-
-" Unmanaged plugin (manually installed and updated)
-"Plug '~/my-prototype-plugin'
-
-"Plug 'altercation/vim-colors-solarized'
-
 " https://github.com/junegunn/fzf.vim
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-Plug 'junegunn/fzf.vim'
 Plug 'ericcurtin/CurtineIncSw.vim'
-" ctag helper plugin. Disabled, it messes up the vim window.
-"Plug 'ludovicchabant/vim-gutentags'
 " Surround script
 Plug 'tpope/vim-surround'
-
+Plug 'bling/vim-airline'
 " Initialize plugin system
 call plug#end()
 
