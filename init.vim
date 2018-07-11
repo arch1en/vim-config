@@ -9,16 +9,15 @@
 
 if has("win32")
   :let ConfigDir = $LOCALAPPDATA.'\nvim'
-"  :let FZFDir = $USERPROFILE.'\.fzf'
   :let VimDir = $USERPROFILE.'\.vim'
 elseif has("unix")
 " [TODO] Do eventual implementation for unix environment
 endif
 " Neovim variant
 function! CreateRequiredFolders(ConfigDir)
-  :let AutoloadDir = a:ConfigDir . '\autoload'
-  :let BundleDir = a:ConfigDir . '\bundle'
-  :let ColorsDir = a:ConfigDir . '\colors'
+    :let AutoloadDir = a:ConfigDir . '\autoload'
+    :let BundleDir = a:ConfigDir . '\bundle'
+    :let ColorsDir = a:ConfigDir . '\colors'
   if !isdirectory(AutoloadDir)
 	  :execute ":silent !mkdir " . AutoloadDir
   endif
@@ -41,14 +40,12 @@ function! ConfigurePlugins(ConfigDir)
 	execute ':silent !cd /d ' . a:ConfigDir . '\bundle && git clone git://github.com/Xuyuanp/nerdtree-git-plugin.git'
 	" Clone Vim Indent Guides
 	execute ':silent !cd /d ' . a:ConfigDir . '\bundle && git clone git://github.com/nathanaelkane/vim-indent-guides.git'
+    execute ':silent !cd /d ' . a:ConfigDir . '\bundle && git clone https://github.com/ctrlpvim/ctrlp.vim.git'
 endfunction
 
 function! ConfigureColorSchemes(ColorDir)
 	" Download a dark color scheme for vim.
 	execute ':silent !curl -LSso ' . a:ColorDir . '\colors\janah.vim https://raw.githubusercontent.com/mhinz/vim-janah/master/colors/janah.vim'
-endfunction
-
-function! ConfigureFZF(ConfigDir)
 endfunction
 
 " [TODO] Make it better so it will replace CurtinIncSW
@@ -62,12 +59,10 @@ endfunction
 
 :call CreateRequiredFolders(ConfigDir)
 :call ConfigurePlugins(ConfigDir)
-":call ConfigureFZF(FZFDir)
 :call ConfigureColorSchemes(ConfigDir)
 
 " Initiate pathogen
 execute pathogen#infect()
-
 " Specify a directory for plugins
 " - For Neovim: ~/.local/share/nvim/plugged
 " - Avoid using standard Vim directory names like 'plugin'
@@ -97,8 +92,6 @@ Plug 'rdnetto/YCM-Generator', { 'branch': 'stable' }
 " Plugin options
 "Plug 'nsf/gocode', { 'tag': 'v.20150303', 'rtp': 'vim' }
 
-" https://github.com/junegunn/fzf.vim
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'ericcurtin/CurtineIncSw.vim'
 " Surround script
 Plug 'tpope/vim-surround'
@@ -143,9 +136,10 @@ set wildmenu
 set mouse=a
 map <ScreelWheelUp> <C-Y>
 map <ScrollWheelDown> <C-E>
-nnoremap <A-w> :call SwitchCorrespondingFile()<CR>
+nnoremap <silent> <A-w> :call SwitchCorrespondingFile()<CR>
 nnoremap <A-q> gT
 nnoremap <A-e> gt
+nnoremap <C-s> :!ctags -a<CR> :w<CR>
 " ~=~ Common Properties ~=~
 
 " -=- Plugin Properties -=-
@@ -156,6 +150,13 @@ nnoremap <A-e> gt
 	nnoremap <A-2> :NERDTree D:\<CR>
     nnoremap <A-3> :NERDTree E:\<CR>
     nnoremap <A-4> :NERDTree F:\<CR>
+    " ~=~ NERDTree Properties ~=~
+    " -=- CtrlP Properties -=-
+    set runtimepath^=ConfigDir\bundle\plugin\ctrlp.vim
+    let g:ctrlp_map = '<c-p>'
+    let g:ctrlp_cmd = 'CtrlP'
+    let g:ctrlp_working_path_mode = 'ra'
+    " ~=~ CtrlP Properties ~=~
 " ~=~ Plugin Properties ~=~
 	
 " Window
