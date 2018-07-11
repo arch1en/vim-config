@@ -134,6 +134,8 @@ autocmd VimEnter * NERDTree | wincmd p
 set path+=**
 set wildmenu
 set mouse=a
+" Working dir will be the same as the file that is edited atm.
+set autochdir
 map <ScreelWheelUp> <C-Y>
 map <ScrollWheelDown> <C-E>
 nnoremap <silent> <A-w> :call SwitchCorrespondingFile()<CR>
