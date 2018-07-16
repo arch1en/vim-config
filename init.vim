@@ -43,6 +43,17 @@ function! ConfigurePlugins(ConfigDir)
     execute ':silent !cd /d ' . a:ConfigDir . '\bundle && git clone https://github.com/ctrlpvim/ctrlp.vim.git'
 endfunction
 
+function! VerticalOpenOrCloseTerminal()
+    :let l:TerminalWindowNumber = bufwinnr('\<\(term://\)')
+    if(TerminalWindowNumber == -1)
+        :split | terminal
+        echo "Terminal window opened"
+    else
+        execute TerminalWindowNumber.'close'
+        echo "Terminal window closed"
+    end
+endfunction
+
 function! ConfigureColorSchemes(ColorDir)
 	" Download a dark color scheme for vim.
 	execute ':silent !curl -LSso ' . a:ColorDir . '\colors\janah.vim https://raw.githubusercontent.com/mhinz/vim-janah/master/colors/janah.vim'
@@ -142,6 +153,11 @@ nnoremap <silent> <A-w> :call SwitchCorrespondingFile()<CR>
 nnoremap <A-q> gT
 nnoremap <A-e> gt
 nnoremap <C-s> :!ctags -a<CR> :w<CR>
+nnoremap <silent> <A-t> :call VerticalOpenOrCloseTerminal()<CR>
+nnoremap <A-T> :split<CR> :terminal<CR>
+" -=- Terminal Properties -=-
+tnoremap <Esc> <C-\><C-n>
+" ~=~ Terminal Properties ~=~
 " ~=~ Common Properties ~=~
 
 " -=- Plugin Properties -=-
