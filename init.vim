@@ -1,4 +1,5 @@
 " Required tools : Git, ctags
+"
 :let s:ConfigDir = ''
 ":let s:FZFDir = ''
 :let s:VimDir = ''
@@ -31,16 +32,37 @@ endfunction
 
 function! ConfigurePlugins(ConfigDir)
 	" Download Pathogen (must be first)
-	execute ':silent !curl -LSso ' . a:ConfigDir . '\autoload\pathogen.vim https://tpo.pe/pathogen.vim'
-	" Download VimPlug
-	execute ':silent !curl -LSso ' . a:ConfigDir . '\autoload\plug.vim https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+    :let NerdTreeID = 'nerdtree-git-plugin'
+    :let VimIndentGuidesID = 'vim-indent-guides'
+    :let CtrlpVimID = 'ctrlp.vim'
+    
+    :let PathogenPath = a:ConfigDir . '\autoload\pathogen.vim'
+    :let PlugPath = a:ConfigDir . '\autoload\plug.vim'
+    :let NerdTreeDir = a:ConfigDir . '\bundle\' . NerdTreeID
+    :let VimIndentGuidesDir = a:ConfigDir . '\bundle\' . VimIndentGuidesID
+    :let CtrlpVimDir = a:ConfigDir . '\bundle\' . CtrlpVimID
+
+    if !filereadable(PathogenPath)
+    	execute ':silent !curl -LSso ' . PathogenPath . ' https://tpo.pe/pathogen.vim'
+    endif
+    " Download VimPlug
+    if !filereadable(PlugPath)
+    	execute ':silent !curl -LSso ' . PlugPath . ' https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+    endif
 	" [DEPRECATED] Clone VimColorsSolarized doesnt work in current NeoVim version.
 	" execute ':silent !cd /d ' . a:ConfigDir . '\bundle && git clone git://github.com/altercation/vim-colors-solarized.git'
 	" Clone NerdTreeGitPlugin
-	execute ':silent !cd /d ' . a:ConfigDir . '\bundle && git clone git://github.com/Xuyuanp/nerdtree-git-plugin.git'
+    if !isdirectory(NerdTreeDir)
+	    execute ':silent !cd /d '.a:ConfigDir.'\bundle && git clone git://github.com/Xuyuanp/'.NerdTreeID.'.git'
+    endif
 	" Clone Vim Indent Guides
-	execute ':silent !cd /d ' . a:ConfigDir . '\bundle && git clone git://github.com/nathanaelkane/vim-indent-guides.git'
-    execute ':silent !cd /d ' . a:ConfigDir . '\bundle && git clone https://github.com/ctrlpvim/ctrlp.vim.git'
+    if !isdirectory(VimIndentGuidesDir)
+    	execute ':silent !cd /d '.a:ConfigDir.'\bundle && git clone git://github.com/nathanaelkane/'.VimIndentGuidesID.'.git'
+    endif
+    " Clone Ctrlp Vim
+    if !isdirectory(CtrlpVimDir)
+        execute ':silent !cd /d '.a:ConfigDir.'\bundle && git clone https://github.com/ctrlpvim/'.CtrlpVimID.'.git'
+    endif
 endfunction
 
 function! VerticalOpenOrCloseTerminal()
@@ -107,6 +129,8 @@ Plug 'ericcurtin/CurtineIncSw.vim'
 " Surround script
 Plug 'tpope/vim-surround'
 Plug 'bling/vim-airline'
+    " Absolute and relative line numbers
+Plug 'jeffkreeftmeijer/vim-numbertoggle'
 " Initialize plugin system
 call plug#end()
 
