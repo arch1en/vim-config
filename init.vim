@@ -1,8 +1,9 @@
 " Required tools : Git, ctags
 "
-:let s:ConfigDir = ''
-":let s:FZFDir = ''
-:let s:VimDir = ''
+:let ConfigDir = ''
+":let FZFDir = ''
+:let VimDir = ''
+:let LuaDir = ''
 
 " {{{ Properties
 "
@@ -11,6 +12,7 @@
 if has("win32")
   :let ConfigDir = $LOCALAPPDATA.'\nvim'
   :let VimDir = $USERPROFILE.'\.vim'
+  :let LuaDir = ConfigDir.'\lua'
 elseif has("unix")
 " [TODO] Do eventual implementation for unix environment
 endif
@@ -131,6 +133,8 @@ Plug 'tpope/vim-surround'
 Plug 'bling/vim-airline'
     " Absolute and relative line numbers
 Plug 'jeffkreeftmeijer/vim-numbertoggle'
+
+Plug 'arch1en/Configs', {'branch' : 'vim-lua-config'}
 " Initialize plugin system
 call plug#end()
 
@@ -197,10 +201,19 @@ tnoremap <Esc> <C-\><C-n>
     set runtimepath^=ConfigDir\bundle\plugin\ctrlp.vim
     let g:ctrlp_map = '<c-p>'
     let g:ctrlp_cmd = 'CtrlP'
-    let g:ctrlp_working_path_mode = 'ra'
+    let g:ctrlp_working_path_mode = 'cra'
     " ~=~ CtrlP Properties ~=~
 " ~=~ Plugin Properties ~=~
 	
 " Window
 :let g:NERDTreeWinSize = 60
 " ~=~ NERDTree Properties ~=~
+
+" -=- Lua support commands -=-
+function! s:ReloadLua(LuaDir, FileName)
+	:execute 'luafile '.a:LuaDir.'\'.a:FileName.'.lua'
+endfunction
+
+command! -nargs=1 ReloadLua :call s:ReloadLua(LuaDir, <f-args>)
+command! -nargs=1 Snip :lua require('init').snippet(<f-args>)
+" ~=~ Lua support commands ~=~
