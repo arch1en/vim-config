@@ -1,4 +1,4 @@
-" Required tools : Git, ctags
+" Required tools : Git, (Universal) ctags
 "
 :let ConfigDir = ''
 ":let FZFDir = ''
@@ -107,34 +107,26 @@ call plug#begin('~/.vim/plugged')
 
 " Shorthand notation; fetches https://github.com/junegunn/vim-easy-align
 Plug 'junegunn/vim-easy-align'
+Plug 'ludovicchabant/vim-gutentags'
 
 " Any valid git URL is allowed
 Plug 'https://github.com/junegunn/vim-github-dashboard.git'
 
-" Multiple Plug commands can be written in a single line using | separators
-"Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
+Plug 'SirVer/ultisnips'
+Plug 'Valloric/YouCompleteMe'
 
 " On-demand loading
 Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
-Plug 'tpope/vim-fireplace', { 'for': 'clojure' }
 
 " Using a non-master branch
 Plug 'rdnetto/YCM-Generator', { 'branch': 'stable' }
 
-" Using a tagged release; wildcard allowed (requires git 1.9.2 or above)
-"Plug 'fatih/vim-go', { 'tag': '*' }
-
-" Plugin options
-"Plug 'nsf/gocode', { 'tag': 'v.20150303', 'rtp': 'vim' }
-
-Plug 'ericcurtin/CurtineIncSw.vim'
 " Surround script
 Plug 'tpope/vim-surround'
 Plug 'bling/vim-airline'
     " Absolute and relative line numbers
 Plug 'jeffkreeftmeijer/vim-numbertoggle'
 
-Plug 'arch1en/Configs', {'branch' : 'vim-lua-config'}
 " Initialize plugin system
 call plug#end()
 
@@ -173,6 +165,7 @@ autocmd VimEnter * NERDTree | wincmd p
 set path+=**
 set wildmenu
 set mouse=a
+set encoding=utf-8
 " Working dir will be the same as the file that is edited atm.
 set autochdir
 map <ScreelWheelUp> <C-Y>
@@ -216,4 +209,14 @@ endfunction
 
 command! -nargs=1 ReloadLua :call s:ReloadLua(LuaDir, <f-args>)
 command! -nargs=1 Snip :lua require('init').snippet(<f-args>)
+command! -nargs=* L :lua require('scripts').execute(<f-args>)
 " ~=~ Lua support commands ~=~
+
+" -=- UltiSnips config -=-
+" Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
+let g:UltiSnipsExpandTrigger="<c-tab>"
+let g:UltiSnipsJumpForwardTrigger="<c-b>"
+let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+let g:UltiSnipsEditSplit="vertical"
+let g:UltiSnipsSnippetDirectories = [ConfigDir.'/snippets', 'UltiSnips']
+" ~=~ UltiSnips config ~=~
