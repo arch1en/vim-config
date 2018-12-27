@@ -4,6 +4,7 @@
 ":let FZFDir = ''
 :let VimDir = ''
 :let LuaDir = ''
+:let PythonDir = ''
 
 " {{{ Properties
 "
@@ -12,10 +13,14 @@
 if has("win32")
   :let ConfigDir = $LOCALAPPDATA.'\nvim'
   :let VimDir = $USERPROFILE.'\.vim'
-  :let LuaDir = ConfigDir.'\lua'
+
 elseif has("unix")
 " [TODO] Do eventual implementation for unix environment
 endif
+
+  :let LuaDir = ConfigDir.'\lua'
+  :let PythonDir = ConfigDir.'\python'
+
 " Neovim variant
 function! CreateRequiredFolders(ConfigDir)
     :let AutoloadDir = a:ConfigDir . '\autoload'
@@ -190,12 +195,34 @@ tnoremap <Esc> <C-\><C-n>
     nnoremap <A-3> :NERDTree E:\<CR>
     nnoremap <A-4> :NERDTree F:\<CR>
     " ~=~ NERDTree Properties ~=~
-    " -=- CtrlP Properties -=-
+    
+	" -=- CtrlP Properties -=-
     set runtimepath^=ConfigDir\bundle\plugin\ctrlp.vim
-    let g:ctrlp_map = '<c-p>'
+    let g:ctrlp_map = '<c-p><c-p>'
     let g:ctrlp_cmd = 'CtrlP'
     let g:ctrlp_working_path_mode = 'cra'
+    let g:ctrlp_root_markers = ['.ctrlp']
+    nnoremap <c-p><c-m> :CtrlP C:/_Workspace/BeBee/Source<CR>
     " ~=~ CtrlP Properties ~=~
+    
+	" -=- Universal ctags Properties -=-
+    set tags+=C:/_Workspace/BeBee/Source/tags;
+    set tags+=c:/Engines/UE_4.20/Engine/Source/tags;
+    " ~=~ Universal ctags Properties ~=~
+	
+	" -=- UltiSnips config -=-
+	" Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
+	" Use 'pip install neovim' for ultisnips and youcompleteme to work.
+	let g:UltiSnipsExpandTrigger="<c-tab>"
+	let g:UltiSnipsJumpForwardTrigger="<c-b>"
+	let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+	let g:UltiSnipsEditSplit="vertical"
+	let g:UltiSnipsSnippetDirectories = [ConfigDir.'/ultisnips', 'UltiSnips']
+	" ~=~ UltiSnips config ~=~
+	
+	" -=- YouCompleteMe config -=-
+	let g:ycm_global_ycm_extra_conf = PythonDir.'/.ycm_extra_conf.py'
+	" ~=~ YouCompleteMe config ~=~
 " ~=~ Plugin Properties ~=~
 	
 " Window
@@ -212,11 +239,4 @@ command! -nargs=1 Snip :lua require('init').snippet(<f-args>)
 command! -nargs=* L :lua require('scripts').execute(<f-args>)
 " ~=~ Lua support commands ~=~
 
-" -=- UltiSnips config -=-
-" Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
-let g:UltiSnipsExpandTrigger="<c-tab>"
-let g:UltiSnipsJumpForwardTrigger="<c-b>"
-let g:UltiSnipsJumpBackwardTrigger="<c-z>"
-let g:UltiSnipsEditSplit="vertical"
-let g:UltiSnipsSnippetDirectories = [ConfigDir.'/snippets', 'UltiSnips']
-" ~=~ UltiSnips config ~=~
+

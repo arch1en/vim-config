@@ -1,0 +1,21 @@
+snippet 'class (\w)' "Create new uclass" r
+#pragma once
+
+#include "CoreMinimal.h"
+#include "UObject/NoExportTypes.h"
+#include "${1:ClassName}.generated.h"
+
+UCLASS()
+class ${2:ProjectApi} U$1 : public UObject
+{
+	GENERATED_BODY()
+
+public:
+
+	$0
+}
+endsnippet
+
+snippet uelog "Create new uelog"
+UE_LOG(LogTemp, Warning, TEXT("File {%s} Function {%s} Line : {%d} ${1:message}"), *FString(__FILE__), *FString(__FILE__), __LINE__);
+endsnippet
