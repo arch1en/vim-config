@@ -3,7 +3,6 @@
 :let ConfigDir = ''
 ":let FZFDir = ''
 :let VimDir = ''
-:let LuaDir = ''
 :let PythonDir = ''
 
 " {{{ Properties
@@ -18,7 +17,6 @@ elseif has("unix")
 " [TODO] Do eventual implementation for unix environment
 endif
 
-  :let LuaDir = ConfigDir.'\lua'
   :let PythonDir = ConfigDir.'\python'
 
 " Neovim variant
@@ -165,6 +163,7 @@ autocmd VimEnter * NERDTree | wincmd p
 :hi NonText guifg=bg
 
 " -=- Common Properties -=-
+
 " Remaps
 " Enable use of the mouse for all modes
 set path+=**
@@ -181,9 +180,11 @@ nnoremap <A-e> gt
 nnoremap <C-s> :!ctags -a<CR> :w<CR>
 nnoremap <silent> <A-t> :call VerticalOpenOrCloseTerminal()<CR>
 nnoremap <A-T> :split<CR> :terminal<CR>
-" -=- Terminal Properties -=-
+" Window
+:let g:NERDTreeWinSize = 60
+" Terminal
 tnoremap <Esc> <C-\><C-n>
-" ~=~ Terminal Properties ~=~
+
 " ~=~ Common Properties ~=~
 
 " -=- Plugin Properties -=-
@@ -203,11 +204,12 @@ tnoremap <Esc> <C-\><C-n>
     let g:ctrlp_working_path_mode = 'cra'
     let g:ctrlp_root_markers = ['.ctrlp']
     nnoremap <c-p><c-m> :CtrlP C:/_Workspace/BeBee/Source<CR>
+	nnoremap <c-p><c-u> :
     " ~=~ CtrlP Properties ~=~
     
 	" -=- Universal ctags Properties -=-
     set tags+=C:/_Workspace/BeBee/Source/tags;
-    set tags+=c:/Engines/UE_4.20/Engine/Source/tags;
+    set tags+=C:/_Engines/UE_4.20/Engine/Source/tags;
     " ~=~ Universal ctags Properties ~=~
 	
 	" -=- UltiSnips config -=-
@@ -224,19 +226,27 @@ tnoremap <Esc> <C-\><C-n>
 	let g:ycm_global_ycm_extra_conf = PythonDir.'/.ycm_extra_conf.py'
 	" ~=~ YouCompleteMe config ~=~
 " ~=~ Plugin Properties ~=~
-	
-" Window
-:let g:NERDTreeWinSize = 60
-" ~=~ NERDTree Properties ~=~
 
-" -=- Lua support commands -=-
+" -=- Python support commands -=-
 function! s:ReloadLua(LuaDir, FileName)
 	:execute 'luafile '.a:LuaDir.'\'.a:FileName.'.lua'
 endfunction
 
-command! -nargs=1 ReloadLua :call s:ReloadLua(LuaDir, <f-args>)
-command! -nargs=1 Snip :lua require('init').snippet(<f-args>)
-command! -nargs=* L :lua require('scripts').execute(<f-args>)
-" ~=~ Lua support commands ~=~
+python3 << EOL
+import sys
+import vim
+import os
+
+dependencies = os.path.abspath(vim.eval("g:PythonDir"))
+sys.path.append(dependencies)
+
+def CallFunc(*args):
+	import scripts
+	sys.args = args
+	s = scripts.main()
+EOL
+
+command! -nargs=* P python3 CallFunc(<f-args>)
+" ~=~ Python support commands ~=~
 
 
