@@ -1,0 +1,3 @@
+let b:workingdir = g:localvimrc_script_dir_unresolved
+
+nnoremap <c-p><c-m> :exe "CtrlP " .b:workingdir<CR>

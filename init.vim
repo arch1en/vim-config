@@ -130,6 +130,8 @@ Plug 'bling/vim-airline'
     " Absolute and relative line numbers
 Plug 'jeffkreeftmeijer/vim-numbertoggle'
 
+Plug 'embear/vim-localvimrc'
+
 " Initialize plugin system
 call plug#end()
 
@@ -142,7 +144,7 @@ set shiftwidth=4
 set expandtab
 
 " Editor font properties
-set guifont=consolas
+set guifont=Consolas:h11
 
 
 " Display line numbers on the left
@@ -199,17 +201,15 @@ tnoremap <Esc> <C-\><C-n>
     
 	" -=- CtrlP Properties -=-
     set runtimepath^=ConfigDir\bundle\plugin\ctrlp.vim
-    let g:ctrlp_map = '<c-p><c-p>'
     let g:ctrlp_cmd = 'CtrlP'
     let g:ctrlp_working_path_mode = 'cra'
     let g:ctrlp_root_markers = ['.ctrlp']
-    nnoremap <c-p><c-m> :CtrlP C:/_Workspace/BeBee/Source<CR>
-	nnoremap <c-p><c-u> :
+    nnoremap <c-p><c-v> :exe "CtrlP " .$MYVMIMRC<CR>
     " ~=~ CtrlP Properties ~=~
     
 	" -=- Universal ctags Properties -=-
-    set tags+=C:/_Workspace/BeBee/Source/tags;
-    set tags+=C:/_Engines/UE_4.20/Engine/Source/tags;
+    "set tags+=C:/path/to/project/tags;
+    "set tags+=C:/path/to/engine/tags;
     " ~=~ Universal ctags Properties ~=~
 	
 	" -=- UltiSnips config -=-
@@ -225,6 +225,13 @@ tnoremap <Esc> <C-\><C-n>
 	" -=- YouCompleteMe config -=-
 	let g:ycm_global_ycm_extra_conf = PythonDir.'/.ycm_extra_conf.py'
 	" ~=~ YouCompleteMe config ~=~
+
+    " -=- LocalVimRC config -=-
+    "   Don't ask before loading a vimrc file.
+    let g:localvimrc_ask=0
+    "   Don't load vimrc file in a sandbox.
+    let g:localvimrc_sandbox=0
+	" ~=~ LocalVimRC config ~=~
 " ~=~ Plugin Properties ~=~
 
 " -=- Python support commands -=-
