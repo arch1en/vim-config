@@ -1,3 +1,6 @@
+global !p
+from ultisnips import scripts
+endglobal
 snippet 'class (\w)' "Create new uclass" r
 #pragma once
 
@@ -18,4 +21,10 @@ endsnippet
 
 snippet uelog "Create new uelog"
 UE_LOG(LogTemp, Warning, TEXT("File {%s} Function {%s} Line : {%d} ${1:message}"), *FString(__FILE__), *FString(__FILE__), __LINE__);
+endsnippet
+
+snippet 'create (\d+)' "Create new stuff" r
+`!p
+scripts.test()
+`
 endsnippet

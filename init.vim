@@ -1,13 +1,7 @@
 " Required tools : Git, (Universal) ctags
 "
 :let ConfigDir = ''
-":let FZFDir = ''
 :let VimDir = ''
-:let PythonDir = ''
-
-" {{{ Properties
-"
-" }}}
 
 if has("win32")
   :let ConfigDir = $LOCALAPPDATA.'\nvim'
@@ -17,56 +11,23 @@ elseif has("unix")
 " [TODO] Do eventual implementation for unix environment
 endif
 
-  :let PythonDir = ConfigDir.'\python'
+:let PythonDir = ConfigDir.'\python'
 
 " Neovim variant
 function! CreateRequiredFolders(ConfigDir)
-    :let AutoloadDir = a:ConfigDir . '\autoload'
-    :let BundleDir = a:ConfigDir . '\bundle'
-    :let ColorsDir = a:ConfigDir . '\colors'
+   :let AutoloadDir = a:ConfigDir . '\autoload'
+
   if !isdirectory(AutoloadDir)
 	  :execute ":silent !mkdir " . AutoloadDir
   endif
-  if !isdirectory(BundleDir)
-	  :execute ":silent !mkdir " . BundleDir
-  endif
-  if !isdirectory(ColorsDir)
-	  :execute ":silent !mkdir " . ColorsDir
-  endif
 endfunction
 
-function! ConfigurePlugins(ConfigDir)
-	" Download Pathogen (must be first)
-    :let NerdTreeID = 'nerdtree-git-plugin'
-    :let VimIndentGuidesID = 'vim-indent-guides'
-    :let CtrlpVimID = 'ctrlp.vim'
-    
-    :let PathogenPath = a:ConfigDir . '\autoload\pathogen.vim'
+function! InitiateVimPlug(ConfigDir)  
     :let PlugPath = a:ConfigDir . '\autoload\plug.vim'
-    :let NerdTreeDir = a:ConfigDir . '\bundle\' . NerdTreeID
-    :let VimIndentGuidesDir = a:ConfigDir . '\bundle\' . VimIndentGuidesID
-    :let CtrlpVimDir = a:ConfigDir . '\bundle\' . CtrlpVimID
 
-    if !filereadable(PathogenPath)
-    	execute ':silent !curl -LSso ' . PathogenPath . ' https://tpo.pe/pathogen.vim'
-    endif
     " Download VimPlug
     if !filereadable(PlugPath)
     	execute ':silent !curl -LSso ' . PlugPath . ' https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-    endif
-	" [DEPRECATED] Clone VimColorsSolarized doesnt work in current NeoVim version.
-	" execute ':silent !cd /d ' . a:ConfigDir . '\bundle && git clone git://github.com/altercation/vim-colors-solarized.git'
-	" Clone NerdTreeGitPlugin
-    if !isdirectory(NerdTreeDir)
-	    execute ':silent !cd /d '.a:ConfigDir.'\bundle && git clone git://github.com/Xuyuanp/'.NerdTreeID.'.git'
-    endif
-	" Clone Vim Indent Guides
-    if !isdirectory(VimIndentGuidesDir)
-    	execute ':silent !cd /d '.a:ConfigDir.'\bundle && git clone git://github.com/nathanaelkane/'.VimIndentGuidesID.'.git'
-    endif
-    " Clone Ctrlp Vim
-    if !isdirectory(CtrlpVimDir)
-        execute ':silent !cd /d '.a:ConfigDir.'\bundle && git clone https://github.com/ctrlpvim/'.CtrlpVimID.'.git'
     endif
 endfunction
 
@@ -81,11 +42,6 @@ function! VerticalOpenOrCloseTerminal()
     end
 endfunction
 
-function! ConfigureColorSchemes(ColorDir)
-	" Download a dark color scheme for vim.
-	execute ':silent !curl -LSso ' . a:ColorDir . '\colors\janah.vim https://raw.githubusercontent.com/mhinz/vim-janah/master/colors/janah.vim'
-endfunction
-
 " [TODO] Make it better so it will replace CurtinIncSW
 function! SwitchCorrespondingFile()
   if(expand('%:e')=='c' || expand('%:e')=='cpp')
@@ -96,11 +52,8 @@ function! SwitchCorrespondingFile()
 endfunction
 
 :call CreateRequiredFolders(ConfigDir)
-:call ConfigurePlugins(ConfigDir)
-:call ConfigureColorSchemes(ConfigDir)
+:call InitiateVimPlug(ConfigDir)
 
-" Initiate pathogen
-execute pathogen#infect()
 " Specify a directory for plugins
 " - For Neovim: ~/.local/share/nvim/plugged
 " - Avoid using standard Vim directory names like 'plugin'
@@ -108,18 +61,21 @@ call plug#begin('~/.vim/plugged')
 
 " Make sure you use single quotes
 
-" Shorthand notation; fetches https://github.com/junegunn/vim-easy-align
+" Text editing plugin
 Plug 'junegunn/vim-easy-align'
-Plug 'ludovicchabant/vim-gutentags'
+Plug 'mhinz/vim-janah'
+Plug 'SirVer/ultisnips'
 
 " Any valid git URL is allowed
 Plug 'https://github.com/junegunn/vim-github-dashboard.git'
 
-Plug 'SirVer/ultisnips'
-Plug 'Valloric/YouCompleteMe'
 
+Plug 'Valloric/YouCompleteMe'
+Plug 'kien/ctrlp.vim'
+Plug 'ludovicchabant/vim-gutentags'
 " On-demand loading
 Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
+Plug 'Xuyuanp/nerdtree-git-plugin'
 
 " Using a non-master branch
 Plug 'rdnetto/YCM-Generator', { 'branch': 'stable' }
@@ -130,6 +86,7 @@ Plug 'bling/vim-airline'
     " Absolute and relative line numbers
 Plug 'jeffkreeftmeijer/vim-numbertoggle'
 
+Plug 'nathanaelkane/vim-indent-guides'
 Plug 'embear/vim-localvimrc'
 
 " Initialize plugin system
@@ -144,7 +101,7 @@ set shiftwidth=4
 set expandtab
 
 " Editor font properties
-set guifont=Consolas:h11
+set guifont=consolas
 
 
 " Display line numbers on the left
@@ -204,12 +161,13 @@ tnoremap <Esc> <C-\><C-n>
     let g:ctrlp_cmd = 'CtrlP'
     let g:ctrlp_working_path_mode = 'cra'
     let g:ctrlp_root_markers = ['.ctrlp']
-    nnoremap <c-p><c-v> :exe "CtrlP " .$MYVMIMRC<CR>
+    nnoremap <c-p><c-m> :CtrlP C:/_Workspace/BeBee/Source<CR>
+    nnoremap <c-p><c-v> :exec "CtrlP ".$MYVIMRC<CR>
     " ~=~ CtrlP Properties ~=~
     
 	" -=- Universal ctags Properties -=-
-    "set tags+=C:/path/to/project/tags;
-    "set tags+=C:/path/to/engine/tags;
+    set tags+=C:/_Workspace/BeBee/Source/tags;
+    set tags+=C:/_Engines/UE_4.20/Engine/Source/tags;
     " ~=~ Universal ctags Properties ~=~
 	
 	" -=- UltiSnips config -=-
@@ -235,9 +193,6 @@ tnoremap <Esc> <C-\><C-n>
 " ~=~ Plugin Properties ~=~
 
 " -=- Python support commands -=-
-function! s:ReloadLua(LuaDir, FileName)
-	:execute 'luafile '.a:LuaDir.'\'.a:FileName.'.lua'
-endfunction
 
 python3 << EOL
 import sys
@@ -248,7 +203,7 @@ dependencies = os.path.abspath(vim.eval("g:PythonDir"))
 sys.path.append(dependencies)
 
 def CallFunc(*args):
-	import scripts
+	from common import scripts
 	sys.args = args
 	s = scripts.main()
 EOL
