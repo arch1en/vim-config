@@ -23,8 +23,11 @@ snippet uelog "Create new uelog"
 UE_LOG(LogTemp, Warning, TEXT("File {%s} Function {%s} Line : {%d} ${1:message}"), *FString(__FILE__), *FString(__FILE__), __LINE__);
 endsnippet
 
-snippet 'create (\d+)' "Create new stuff" r
+snippet 'create (\w+) (\w+)' "Create new stuff" r
 `!p
-scripts.test()
+m = match
+print(m.group(0))
+print(m.group(1))
+snip.rv = scripts.CreateNew(m)
 `
 endsnippet

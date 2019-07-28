@@ -2,10 +2,12 @@
 "
 :let ConfigDir = ''
 :let VimDir = ''
+:let VimPluginsDir = ''
 
 if has("win32")
   :let ConfigDir = $LOCALAPPDATA.'\nvim'
   :let VimDir = $USERPROFILE.'\.vim'
+  :let VimPluginsDir = VimDir. '\plugged'
 
 elseif has("unix")
 " [TODO] Do eventual implementation for unix environment
@@ -88,7 +90,6 @@ Plug 'jeffkreeftmeijer/vim-numbertoggle'
 
 Plug 'nathanaelkane/vim-indent-guides'
 Plug 'embear/vim-localvimrc'
-
 " Initialize plugin system
 call plug#end()
 
@@ -113,10 +114,14 @@ set number
 "colorscheme solarized
 
 " vim-janah color scheme properties
-colorscheme janah
-" NERDTree properties
+if isdirectory(VimPluginsDir. '\vim-janah')
+	colorscheme janah
+endif
 
-autocmd VimEnter * NERDTree | wincmd p
+" NERDTree properties
+if isdirectory(VimPluginsDir. '\nerdtree')
+	autocmd VimEnter * NERDTree | wincmd p
+endif
 
 " Change "~" color on empty lines so it will blend with the background.
 :hi NonText guifg=bg
@@ -161,7 +166,8 @@ tnoremap <Esc> <C-\><C-n>
     let g:ctrlp_cmd = 'CtrlP'
     let g:ctrlp_working_path_mode = 'cra'
     let g:ctrlp_root_markers = ['.ctrlp']
-    nnoremap <c-p><c-m> :CtrlP C:/_Workspace/BeBee/Source<CR>
+    nnoremap <c-p><c-m> :CtrlP X:/_Workspace/Varsav/BeBee/Source<CR>
+	nnoremap <c-p><c-g> :CtrlP C:/_Workspace/DreamPlant/Latest/Source<CR>
     nnoremap <c-p><c-v> :exec "CtrlP ".$MYVIMRC<CR>
     " ~=~ CtrlP Properties ~=~
     
@@ -190,6 +196,10 @@ tnoremap <Esc> <C-\><C-n>
     "   Don't load vimrc file in a sandbox.
     let g:localvimrc_sandbox=0
 	" ~=~ LocalVimRC config ~=~
+    " { ColorCoded Config
+    let g:color_coded_enabled = 1
+    let g:color_coded_filetypes = ['c', 'cpp', 'h', 'hpp']
+    " } ColorCoded Config
 " ~=~ Plugin Properties ~=~
 
 " -=- Python support commands -=-
