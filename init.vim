@@ -102,7 +102,7 @@ set shiftwidth=4
 set expandtab
 
 " Editor font properties
-set guifont=consolas
+set guifont=verdana
 
 
 " Display line numbers on the left
