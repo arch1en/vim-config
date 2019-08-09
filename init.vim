@@ -153,6 +153,10 @@ tnoremap <Esc> <C-\><C-n>
 
 " -=- Plugin Properties -=-
 
+    " -=- vim-numbertoggle Properties -=-
+    nnoremap <c-l> :set relativenumber!<CR>
+    " ~=~ vim-numbertoggle Properties ~=~
+
 	" -=- NERDTree Properties -=-
 	" Remaps
 	nnoremap <A-1> :NERDTree C:\<CR>
